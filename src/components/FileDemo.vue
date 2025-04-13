@@ -31,7 +31,7 @@ import { ref, defineComponent, watch, computed } from 'vue';
 
 export default defineComponent({
    
-    name: 'FileDemo',
+    name: 'FileDemo', 
     
     setup(props) {
         
