@@ -56,9 +56,10 @@ export default defineComponent({
     
     setup(props) {
 
-      let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
+      let url = "http://sp-dev-sp/sites/dev";
+     // let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
    //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
-      //       let url = "https://nshqdev.sharepoint.com/teams/classic/";
+      
 
       let sharePointListName = "PNPTest"
       let itemId = 1;
@@ -160,6 +161,8 @@ export default defineComponent({
         Logger.write(`Saving the file to a SharePoint list using Vuetify file having file size ${file.size}`);
 
         let fileBuffer = await file.arrayBuffer();
+
+        Logger.write(`Target url is ${url}`);
 
         //Grab the web information using pnpjs
         const web = Web(url);
