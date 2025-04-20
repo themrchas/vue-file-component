@@ -15,3 +15,5 @@ https://github.com/SharePoint/PnP-JS-Core/wiki/Basic--Operations   more js menti
 
 ### Solution for the target document library name in getFolderByServerRelativeUrl
 https://stackoverflow.com/questions/26182858/http-400-bad-request-when-using-getfilebyserverrelativeurl-or-getfolderbyserverr
+
+Srill need to test the over 10M file routines
