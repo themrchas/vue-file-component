@@ -10,14 +10,21 @@
         label="Upload your file to a SharePoint list"
         v-model="fileNameForList"
       />
+      <v-btn @click="getAttachmentNames">Attachments</v-btn>
     </v-container>
-  </v-app>
+    
+<v-container >
+  <v-row justify="start">
+    <v-col cols="3">
+      <v-btn color="info"  @click="addFileToSharePoint">Add to Doc Lib</v-btn>
+    </v-col>
+    <v-col cols="3">
+      <v-btn variant="tonal" type="button" @click="addFileToSharePointList">Add to List Item</v-btn>
+    </v-col>
+  </v-row>
+  </v-container>
 
-  <div display="flex" flex-flow="space-around" style="width:600px">
-    <button type="button" @click="addFileToSharePoint">Add to Doc Lib</button>
-    <button type="button" @click="addFileToSharePointList">Add to List Item</button>
-  </div>
- 
+  </v-app>
 
   <h2>{{ fileName }}</h2>
 
@@ -39,8 +46,8 @@ import { ref, defineComponent, watch, computed } from 'vue';
 import { ConsoleListener, Logger, LogLevel } from "@pnp/logging";
 import { sp } from "@pnp/sp";
 import { Web } from "@pnp/sp/webs";
-import "@pnp/sp/webs";
-import "@pnp/sp/files";
+import "@pnp/sp/webs"; 
+//import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/attachments";
 import "@pnp/sp/items";
@@ -56,9 +63,9 @@ export default defineComponent({
     
     setup(props) {
 
-      let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
+    //  let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
    //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
-      //       let url = "https://nshqdev.sharepoint.com/teams/classic/";
+             let url = "https://nshqdev.sharepoint.com/teams/classic/";
 
       let sharePointListName = "PNPTest"
       let itemId = 1;
@@ -76,6 +83,11 @@ export default defineComponent({
         //Name of file to be uploaded using HTMLElement to a Document Library
         const fileName = computed(() => {
           return fileNameSelected.value?.name ? fileNameSelected.value.name : "No file has been selected"
+        })
+
+        watch(fileNameSelected,() => {
+          console.log('fileNameSelected changed - ',fileNameSelected.value);
+     
         })
 
         watch(fileNameSelected,() => {
@@ -152,6 +164,7 @@ export default defineComponent({
          
         } //addInputFileToSharePoint
 
+      //Add file to a SharePoint generic list item
       const addFileToSharePointList = async () => {
 
         //This is a Vue ref object, so need to access properties using '.value'
@@ -159,6 +172,7 @@ export default defineComponent({
 
         Logger.write(`Saving the file to a SharePoint list using Vuetify file having file size ${file.size}`);
 
+        //Read file into array buffer
         let fileBuffer = await file.arrayBuffer();
 
         //Grab the web information using pnpjs
@@ -168,11 +182,11 @@ export default defineComponent({
         if (file.size <= 10485760) {
 
          
+        //Add the file to the list item
         await web.lists.getByTitle(sharePointListName).items.getById(itemId).attachmentFiles.add(file.name, fileBuffer);
         Logger.log('check to see if the file was added to the list item');
     //   Worked for getting   let targetListItem = await web.lists.getByTitle(sharePointListName).items.getById(1)();
-     //    Logger.log(`web.lists.getByTitle returned ${targetListItem}`);
-    //     await targetListItem.attachmentFiles.add(file.name, fileBuffer);
+     
         
         }
 
@@ -192,7 +206,31 @@ export default defineComponent({
       } //addFileToSharePointList
 
 
-        return { fileNameSelected, fileName, fileNameForList,  addFileToSharePoint , addInputFileToSharePoint, addFileToSharePointList }
+      const getAttachmentNames = async () => {
+
+        Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
+
+        //Grab the web information using pnpjs
+        const web = Web(url);
+
+       // const attachments = await web.lists.getByTitle(sharePointListName).items.getElementById("1").attachmentFiles();
+       //const listItem = await web.lists.getByTitle(sharePointListName).items.getById(1)(); //worked
+       const listItem = await web.lists.getByTitle(sharePointListName).items.getById(1)
+       const listItemAttachments = await listItem.attachmentFiles();
+       console.log("attachment data is ",listItemAttachments);
+
+       let attachementFileNames = listItemAttachments.map((attachment) => attachment.FileName);
+       console.log('file names are',attachementFileNames);
+
+
+        Logger.write("addInputFileToSharePoint: attachments", attachments);
+
+
+      }
+
+
+
+        return { fileNameSelected, fileName, fileNameForList,  addFileToSharePoint , addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames }
 
 
     } //setup
@@ -207,6 +245,8 @@ export default defineComponent({
 #test {
   width: 200px
 }
+
+
 
 
 </style>

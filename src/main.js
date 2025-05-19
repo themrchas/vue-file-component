@@ -3,14 +3,15 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 import { createVuetify } from 'vuetify';
-import { VApp, VContainer, VFileInput } from 'vuetify/components'
+import { VApp, VContainer, VFileInput, VBtn, VRow, VCol } from 'vuetify/components'
 
 import * as directives from 'vuetify/directives'
 import 'vuetify/styles'
 
 const vuetify = createVuetify({
     components : {
-        VApp, VContainer, VFileInput
+        VApp, VContainer, VFileInput, 
+        VBtn, VRow, VCol
     },
     directives,
   })

@@ -6,7 +6,7 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 
 
 ### stackoverflow has discussions on how to debug vue. Created a launch.json file per the link below with entry 'it should be quite simple'. done in chrome.
-
+launch.json: Run -> Add Configuration ->  "url": "http://localhost:5173",   Port is whatver shows when invoking vite as 'npm run dev'
 stackoverflow.com/questions/66147328/is-there-a-way-to-debug-cod-in-vscode-initiated-with-vite
 
 Used node version 18.20.8
