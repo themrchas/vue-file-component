@@ -24,6 +24,20 @@
   </v-row>
   </v-container>
 
+  <v-container>
+
+    <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
+
+    <v-row v-for="(fileNamesRow,index) in attachedFileNamesArray" no-gutters :key="index">
+
+      <v-col v-for="(fileName,i) in fileNamesRow" :key="fileName" cols="6" sm="2">
+        <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName"></v-checkbox>
+      </v-col>
+
+    </v-row>
+
+  </v-container>
+
   </v-app>
 
   <h2>{{ fileName }}</h2>
@@ -70,20 +84,42 @@ export default defineComponent({
       let sharePointListName = "PNPTest"
       let itemId = 1;
 
+      const ATTACHMENT_FILE_NAMES_PER_ROW = 3;
+
       
 
       console.log('starting setup routine');
+
+
         
         //Vue name for file chosen to be saved to a Document Library 
         let fileNameSelected = ref(null);
 
         //Vue name for file chosen to be saved to a SharePoint list item
         let fileNameForList = ref(null);
+
+        //Item File attachment names
+        let attachmentFileNames = ref([]);
+
+        //Array of those items that have been selected in the checkboxs
+        let checkboxFileNamesSelected = ref([]);
        
         //Name of file to be uploaded using HTMLElement to a Document Library
         const fileName = computed(() => {
           return fileNameSelected.value?.name ? fileNameSelected.value.name : "No file has been selected"
         })
+
+        //Returns a multidimensional array of the fetched attachment file names with each array row containing ATTACHMENT_FILE_NAMES_PER_ROW file names
+        const attachedFileNamesArray = computed(() => {
+          
+          console.log('computed: current value of attachmentFileNames',attachmentFileNames.value)
+
+          return Array.from({length:Math.ceil(attachmentFileNames.value.length / ATTACHMENT_FILE_NAMES_PER_ROW)}, 
+              (_, i) => attachmentFileNames.value.slice(i* ATTACHMENT_FILE_NAMES_PER_ROW, i * ATTACHMENT_FILE_NAMES_PER_ROW +3)  
+          )
+        })
+       
+       
 
         watch(fileNameSelected,() => {
           console.log('fileNameSelected changed - ',fileNameSelected.value);
@@ -92,6 +128,11 @@ export default defineComponent({
 
         watch(fileNameSelected,() => {
           console.log('fileNameSelected changed - ',fileNameSelected.value);
+     
+        })
+
+        watch(attachedFileNamesArray,() => {
+          console.log('attachedFileNamesArray changed - ',attachedFileNamesArray.value);
      
         })
 
@@ -219,18 +260,18 @@ export default defineComponent({
        const listItemAttachments = await listItem.attachmentFiles();
        console.log("attachment data is ",listItemAttachments);
 
-       let attachementFileNames = listItemAttachments.map((attachment) => attachment.FileName);
-       console.log('file names are',attachementFileNames);
+       attachmentFileNames.value = listItemAttachments.map((attachment) => attachment.FileName);
+       console.log('file names are',attachmentFileNames.value);
 
 
-        Logger.write("addInputFileToSharePoint: attachments", attachments);
+        Logger.write("addInputFileToSharePoint: listItemAttachments", listItemAttachments);
 
 
       }
 
 
 
-        return { fileNameSelected, fileName, fileNameForList,  addFileToSharePoint , addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames }
+        return { fileNameSelected, fileName, fileNameForList,  attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint , addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames }
 
 
     } //setup
