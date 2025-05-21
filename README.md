@@ -15,3 +15,7 @@ https://github.com/SharePoint/PnP-JS-Core/wiki/Basic--Operations   more js menti
 
 ### Solution for the target document library name in getFolderByServerRelativeUrl
 https://stackoverflow.com/questions/26182858/http-400-bad-request-when-using-getfilebyserverrelativeurl-or-getfolderbyserverr
+
+### The v-checkbox does not display the box icon by default. Needed to add the @mdi/js package and use the following to have checkbox displays...
+Used answer by 'theking' to modify main.js
+https://stackoverflow.com/questions/67636717/v-checkbox-icon-missing-with-vuetify-mdi-js-whats-the-best-way-to-import-it

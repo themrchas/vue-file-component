@@ -1,53 +1,49 @@
 <template id="test">
-    
-    <v-app>
+
+  <v-app>
     <v-container>
-      <v-file-input
-        label="Upload your file"
-        v-model="fileNameSelected"
-      />
-      <v-file-input
-        label="Upload your file to a SharePoint list"
-        v-model="fileNameForList"
-      />
+      <v-file-input label="Upload your file" v-model="fileNameSelected" />
+      <v-file-input label="Upload your file to a SharePoint list" v-model="fileNameForList" />
       <v-btn @click="getAttachmentNames">Attachments</v-btn>
     </v-container>
-    
-<v-container >
-  <v-row justify="start">
-    <v-col cols="3">
-      <v-btn color="info"  @click="addFileToSharePoint">Add to Doc Lib</v-btn>
-    </v-col>
-    <v-col cols="3">
-      <v-btn variant="tonal" type="button" @click="addFileToSharePointList">Add to List Item</v-btn>
-    </v-col>
-  </v-row>
-  </v-container>
 
-  <v-container>
+    <v-container>
+      <v-row justify="start">
+        <v-col cols="3">
+          <v-btn color="info" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
+        </v-col>
+        <v-col cols="3">
+          <v-btn variant="tonal" type="button" @click="addFileToSharePointList">Add to List Item</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
 
-    <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
+    <v-container >
 
-    <v-row v-for="(fileNamesRow,index) in attachedFileNamesArray" no-gutters :key="index">
+      <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
 
-      <v-col v-for="(fileName,i) in fileNamesRow" :key="fileName" cols="6" sm="2">
-        <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName"></v-checkbox>
-      </v-col>
+      <v-row v-for="(fileNamesRow, index) in attachedFileNamesArray" no-gutters :key="index">
 
-    </v-row>
+        <v-col v-for="(fileName, i) in fileNamesRow" :key="fileName" cols="6" sm="2" >
+          <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName" class="chkBoxContainer"></v-checkbox>
+        </v-col>
 
-  </v-container>
+      </v-row>
+
+    </v-container>
 
   </v-app>
 
   <h2>{{ fileName }}</h2>
 
-  <br/>
-  <br/>
+  <br />
+  <br />
 
-  <input type="file" id="fileInput" ></input>
+  <button type="button" @click="testUpdateArray">Update Array</button>
+
+  <input type="file" id="fileInput"></input>
   <button type="button" @click="addInputFileToSharePoint">Add file</button>
-     
+
 
 
 
@@ -81,7 +77,7 @@ export default defineComponent({
    //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
              let url = "https://nshqdev.sharepoint.com/teams/classic/";
 
-      let sharePointListName = "PNPTest"
+      const SHAREPOINT_LIST_NAME = "PNPTest"
       let itemId = 1;
 
       const ATTACHMENT_FILE_NAMES_PER_ROW = 3;
@@ -110,7 +106,7 @@ export default defineComponent({
         })
 
         //Returns a multidimensional array of the fetched attachment file names with each array row containing ATTACHMENT_FILE_NAMES_PER_ROW file names
-        const attachedFileNamesArray = computed(() => {
+         const attachedFileNamesArray = computed(() => {
           
           console.log('computed: current value of attachmentFileNames',attachmentFileNames.value)
 
@@ -118,6 +114,8 @@ export default defineComponent({
               (_, i) => attachmentFileNames.value.slice(i* ATTACHMENT_FILE_NAMES_PER_ROW, i * ATTACHMENT_FILE_NAMES_PER_ROW +3)  
           )
         })
+       
+
        
        
 
@@ -224,9 +222,9 @@ export default defineComponent({
 
          
         //Add the file to the list item
-        await web.lists.getByTitle(sharePointListName).items.getById(itemId).attachmentFiles.add(file.name, fileBuffer);
+        await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(itemId).attachmentFiles.add(file.name, fileBuffer);
         Logger.log('check to see if the file was added to the list item');
-    //   Worked for getting   let targetListItem = await web.lists.getByTitle(sharePointListName).items.getById(1)();
+    //   Worked for getting   let targetListItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)();
      
         
         }
@@ -254,9 +252,9 @@ export default defineComponent({
         //Grab the web information using pnpjs
         const web = Web(url);
 
-       // const attachments = await web.lists.getByTitle(sharePointListName).items.getElementById("1").attachmentFiles();
-       //const listItem = await web.lists.getByTitle(sharePointListName).items.getById(1)(); //worked
-       const listItem = await web.lists.getByTitle(sharePointListName).items.getById(1)
+       // const attachments = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getElementById("1").attachmentFiles();
+       //const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
+       const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)
        const listItemAttachments = await listItem.attachmentFiles();
        console.log("attachment data is ",listItemAttachments);
 
@@ -269,9 +267,13 @@ export default defineComponent({
 
       }
 
+      const testUpdateArray =()  => {
+        attachmentFileNames.value = ["file1.txt","file2.txt"];
+      }
 
 
-        return { fileNameSelected, fileName, fileNameForList,  attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint , addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames }
+
+        return { testUpdateArray,  fileNameSelected, fileName, fileNameForList,  attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint , addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames }
 
 
     } //setup
@@ -283,9 +285,23 @@ export default defineComponent({
 
 <style scoped>
 
+
 #test {
   width: 200px
 }
+
+
+/* .chkBoxContainer {
+  font-size: 6px;
+}
+*/
+
+:deep(.v-checkbox .v-label) {
+  font-size: 12px;
+ 
+}
+
+
 
 
 
