@@ -18,22 +18,32 @@
       </v-row>
     </v-container>
 
-    <v-container >
+    <v-container class="testContainer border">
 
-      <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
 
-      <v-row v-for="(fileNamesRow, index) in attachedFileNamesArray" no-gutters :key="index">
 
-        <v-col v-for="(fileName, i) in fileNamesRow" :key="fileName" cols="6" sm="2" >
-          <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName" class="chkBoxContainer"></v-checkbox>
+
+
+      <v-row v-for="(fileNamesRow, index) in attachedFileNamesArray" no-gutters :key="index" justify="start"
+        class="border chkBoxRow h-auto">
+
+        <v-col v-for="(fileName, i) in fileNamesRow" :key="fileName" cols="2" sm="2" class="border">
+          <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName"
+            class="chkBoxContainer"></v-checkbox>
         </v-col>
 
       </v-row>
+
+      <v-btn @click="deleteAttachments">Delete Files</v-btn>
+
+
 
     </v-container>
 
   </v-app>
 
+
+  <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
   <h2>{{ fileName }}</h2>
 
   <br />
@@ -51,243 +61,282 @@
 
 <script>
 
-import { ref, defineComponent, watch, computed } from 'vue';
+import { ref, defineComponent, watch, computed, onBeforeMount } from 'vue';
 
 import { ConsoleListener, Logger, LogLevel } from "@pnp/logging";
 import { sp } from "@pnp/sp";
 import { Web } from "@pnp/sp/webs";
-import "@pnp/sp/webs"; 
+import "@pnp/sp/webs";
 //import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/attachments";
 import "@pnp/sp/items";
-import {List } from "@pnp/sp/lists";
+import { List } from "@pnp/sp/lists";
 
 
 
 
 
 export default defineComponent({
-   
-    name: 'FileDemo', 
-    
-    setup(props) {
+
+  name: 'FileDemo',
+
+  setup(props) {
 
     //  let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
-   //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
-             let url = "https://nshqdev.sharepoint.com/teams/classic/";
+    //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
+    let url = "https://nshqdev.sharepoint.com/teams/classic/";
 
-      const SHAREPOINT_LIST_NAME = "PNPTest"
-      let itemId = 1;
+    const SHAREPOINT_LIST_NAME = "PNPTest"
+    let itemId = 1;
 
-      const ATTACHMENT_FILE_NAMES_PER_ROW = 3;
-
-      
-
-      console.log('starting setup routine');
+    const ATTACHMENT_FILE_NAMES_PER_ROW = 6;
 
 
-        
-        //Vue name for file chosen to be saved to a Document Library 
-        let fileNameSelected = ref(null);
-
-        //Vue name for file chosen to be saved to a SharePoint list item
-        let fileNameForList = ref(null);
-
-        //Item File attachment names
-        let attachmentFileNames = ref([]);
-
-        //Array of those items that have been selected in the checkboxs
-        let checkboxFileNamesSelected = ref([]);
-       
-        //Name of file to be uploaded using HTMLElement to a Document Library
-        const fileName = computed(() => {
-          return fileNameSelected.value?.name ? fileNameSelected.value.name : "No file has been selected"
-        })
-
-        //Returns a multidimensional array of the fetched attachment file names with each array row containing ATTACHMENT_FILE_NAMES_PER_ROW file names
-         const attachedFileNamesArray = computed(() => {
-          
-          console.log('computed: current value of attachmentFileNames',attachmentFileNames.value)
-
-          return Array.from({length:Math.ceil(attachmentFileNames.value.length / ATTACHMENT_FILE_NAMES_PER_ROW)}, 
-              (_, i) => attachmentFileNames.value.slice(i* ATTACHMENT_FILE_NAMES_PER_ROW, i * ATTACHMENT_FILE_NAMES_PER_ROW +3)  
-          )
-        })
-       
-
-       
-       
-
-        watch(fileNameSelected,() => {
-          console.log('fileNameSelected changed - ',fileNameSelected.value);
-     
-        })
-
-        watch(fileNameSelected,() => {
-          console.log('fileNameSelected changed - ',fileNameSelected.value);
-     
-        })
-
-        watch(attachedFileNamesArray,() => {
-          console.log('attachedFileNamesArray changed - ',attachedFileNamesArray.value);
-     
-        })
+    console.log('starting setup routine');
 
 
 
-      sp.setup({
+    //Vue name for file chosen to be saved to a Document Library 
+    let fileNameSelected = ref(null);
 
-        pageContext: {
-          web: {
-            baseUrl: url,
-            absoluteUrl: url
+    //Vue name for file chosen to be saved to a SharePoint list item
+    let fileNameForList = ref(null);
 
-          }
+    //Item File attachment names
+    let attachmentFileNames = ref([]);
+
+    //Array of those items that have been selected in the checkboxs
+    let checkboxFileNamesSelected = ref([]);
+
+    //Name of file to be uploaded using HTMLElement to a Document Library
+    const fileName = computed(() => {
+      return fileNameSelected.value?.name ? fileNameSelected.value.name : "No file has been selected"
+    })
+
+    //Returns a multidimensional array of the fetched attachment file names with each array row containing ATTACHMENT_FILE_NAMES_PER_ROW file names
+    const attachedFileNamesArray = computed(() => {
+
+      console.log('computed: current value of attachmentFileNames', attachmentFileNames.value)
+
+      let toReturn = Array.from({ length: Math.ceil(attachmentFileNames.value.length / ATTACHMENT_FILE_NAMES_PER_ROW) },
+        (_, i) => attachmentFileNames.value.slice(i * ATTACHMENT_FILE_NAMES_PER_ROW, i * ATTACHMENT_FILE_NAMES_PER_ROW + ATTACHMENT_FILE_NAMES_PER_ROW)
+      )
+
+      return toReturn
+    })
+
+
+    let web = null // = Web(url);
+
+
+
+    watch(fileNameSelected, () => {
+      console.log('fileNameSelected changed - ', fileNameSelected.value);
+
+    })
+
+    watch(fileNameSelected, () => {
+      console.log('fileNameSelected changed - ', fileNameSelected.value);
+
+    })
+
+    watch(attachedFileNamesArray, () => {
+      console.log('attachedFileNamesArray changed - ', attachedFileNamesArray.value);
+
+    })
+
+
+
+    sp.setup({
+
+      pageContext: {
+        web: {
+          baseUrl: url,
+          absoluteUrl: url
+
         }
-      }); //sp.setup
+      }
+    }); //sp.setup
+
+    onBeforeMount(() => {
+      console.log('onBeforeMount')
+      web = Web(url);
+    });
 
 
+    /* Add file to SharePoint Document Library using Vuetify File */
+    const addFileToSharePoint = async () => {
 
+      Logger.write(`Saving the file using Vuetify file having file size ${fileNameSelected.value.size}`);
 
-      /* Add file to SharePoint Document Library using Vuetify File */
-      const addFileToSharePoint = async () => {
+      //This is a Vue ref object , so need to access propertied using '.value'
+      let file = fileNameSelected
 
-        Logger.write(`Saving the file using Vuetify file having file size ${fileNameSelected.value.size}`);
+      //Grab the web information using pnpjs
+      // const web = Web(url);
 
-        //This is a Vue ref object , so need to access propertied using '.value'
-        let file = fileNameSelected
+      //Adjust this number to control what size files are uploaded in chunks
+      if (file.value.size <= 10485760) {
 
-        //Grab the web information using pnpjs
-        const web = Web(url);
+        await web.getFolderByServerRelativeUrl("Shared Documents/").files.add(file.value.name, file.value, true);
 
-        //Adjust this number to control what size files are uploaded in chunks
-        if (file.value.size <= 10485760) {
+      }
 
-          await web.getFolderByServerRelativeUrl("Shared Documents/").files.add(file.value.name, file.value, true);
+      // large upload
+      else {
 
-        } 
-
-        // large upload
-        else {
-          
-          await web.getFolderByServerRelativeUrl("Shared Documents/").files.addChunked(file.name, file.value, data => {
+        await web.getFolderByServerRelativeUrl("Shared Documents/").files.addChunked(file.name, file.value, data => {
 
           Logger.log({ data: data, level: LogLevel.Verbose, message: "progress" });
 
-          }, true);
+        }, true);
 
-        }
+      }
 
-        Logger.write("File upload complete.");
-
-
-      } //addFileToSharePoint
+      Logger.write("File upload complete.");
 
 
-      /* Add file to SharePoint Document Library using HTMLElement <input>*/  
-        const addInputFileToSharePoint = async () => {
+    } //addFileToSharePoint
 
-          
-          var files = document.getElementById("fileInput").files;
-          var file = files[0];
 
-          Logger.write(`Saving the file using Vuetify file having file size ${file.size}`);
+    /* Add file to SharePoint Document Library using HTMLElement <input>*/
+    const addInputFileToSharePoint = async () => {
 
-           //Grab the web information using pnpjs
-          const web = Web(url);
-          
-          await web.getFolderByServerRelativeUrl("Shared Documents/").files.add(file.name, file, true);
 
-          Logger.write("File upload complete.");
-         
-        } //addInputFileToSharePoint
+      var files = document.getElementById("fileInput").files;
+      var file = files[0];
 
-      //Add file to a SharePoint generic list item
-      const addFileToSharePointList = async () => {
+      Logger.write(`Saving the file using Vuetify file having file size ${file.size}`);
 
-        //This is a Vue ref object, so need to access properties using '.value'
-        let file = fileNameForList.value
+      //Grab the web information using pnpjs
+      //  const web = Web(url);
 
-        Logger.write(`Saving the file to a SharePoint list using Vuetify file having file size ${file.size}`);
+      await web.getFolderByServerRelativeUrl("Shared Documents/").files.add(file.name, file, true);
 
-        //Read file into array buffer
-        let fileBuffer = await file.arrayBuffer();
+      Logger.write("File upload complete.");
 
-        //Grab the web information using pnpjs
-        const web = Web(url);
+    } //addInputFileToSharePoint
 
-        //Adjust this number to control what size files are uploaded in chunks
-        if (file.size <= 10485760) {
+    //Add file to a SharePoint generic list item
+    const addFileToSharePointList = async () => {
 
-         
+      //This is a Vue ref object, so need to access properties using '.value'
+      let file = fileNameForList.value
+
+      Logger.write(`Saving the file to a SharePoint list using Vuetify file having file size ${file.size}`);
+
+      //Read file into array buffer
+      let fileBuffer = await file.arrayBuffer();
+
+      //Grab the web information using pnpjs
+      //    const web = Web(url);
+
+      //Adjust this number to control what size files are uploaded in chunks
+      if (file.size <= 10485760) {
+
+
         //Add the file to the list item
         await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(itemId).attachmentFiles.add(file.name, fileBuffer);
         Logger.log('check to see if the file was added to the list item');
-    //   Worked for getting   let targetListItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)();
-     
-        
-        }
-
-        // large upload
-        else {
-
-          await web.getFolderByServerRelativeUrl("Shared Documents/").files.addChunked(file.name, file.value, data => {
-
-            Logger.log({ data: data, level: LogLevel.Verbose, message: "progress" });
-
-          }, true);
-
-        }
-
-        Logger.write("File upload to SharePoint list is complete.");
-
-      } //addFileToSharePointList
-
-
-      const getAttachmentNames = async () => {
-
-        Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
-
-        //Grab the web information using pnpjs
-        const web = Web(url);
-
-       // const attachments = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getElementById("1").attachmentFiles();
-       //const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
-       const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)
-       const listItemAttachments = await listItem.attachmentFiles();
-       console.log("attachment data is ",listItemAttachments);
-
-       attachmentFileNames.value = listItemAttachments.map((attachment) => attachment.FileName);
-       console.log('file names are',attachmentFileNames.value);
-
-
-        Logger.write("addInputFileToSharePoint: listItemAttachments", listItemAttachments);
+        //   Worked for getting   let targetListItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)();
 
 
       }
 
-      const testUpdateArray =()  => {
-        attachmentFileNames.value = ["file1.txt","file2.txt"];
+      // large upload
+      else {
+
+        await web.getFolderByServerRelativeUrl("Shared Documents/").files.addChunked(file.name, file.value, data => {
+
+          Logger.log({ data: data, level: LogLevel.Verbose, message: "progress" });
+
+        }, true);
+
       }
 
+      Logger.write("File upload to SharePoint list is complete.");
+
+    } //addFileToSharePointList
 
 
-        return { testUpdateArray,  fileNameSelected, fileName, fileNameForList,  attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint , addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames }
+    const getAttachmentNames = async () => {
+
+      console.log('yes money');
+
+      Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
+
+      //Grab the web information using pnpjs
+      //    const web = Web(url);
+
+      // const attachments = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getElementById("1").attachmentFiles();
+      //const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
+      const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)
+      const listItemAttachments = await listItem.attachmentFiles();
+      console.log("attachment data is ", listItemAttachments);
+
+      attachmentFileNames.value = listItemAttachments.map((attachment) => attachment.FileName);
+      console.log('file names are', attachmentFileNames.value);
 
 
-    } //setup
+      Logger.write("addInputFileToSharePoint: listItemAttachments", listItemAttachments);
 
 
-})
+    }
+
+    const testUpdateArray = () => {
+      attachmentFileNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
+    }
+
+    
+    const deleteAttachments = async () => {
+
+      //Delete all files from the list item
+      let retVal = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(itemId).attachmentFiles.deleteMultiple(checkboxFileNamesSelected.value.join());
+
+      if (retVal) {
+        console.log("deleteAttachments returned", retVal);
+
+      }
+      //Remove the deleted file 
+      else {
+
+        await getAttachmentNames();
+
+      }
+    } //deleteAttachments
+
+
+
+      return { testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+
+
+
+  } //setup
+
+  })
 
 </script>
 
 <style scoped>
+.testContainer {
+  width: 50%
+}
 
+/*
+.testContainer {
+  width:300px
+}
+  */
+/* .chkBoxRow { 
+    height:auto
+   
 
-#test {
-  width: 200px
+  } */
+
+.v-container {
+  margin-left: 50px;
+
 }
 
 
@@ -296,14 +345,9 @@ export default defineComponent({
 }
 */
 
+
 :deep(.v-checkbox .v-label) {
   font-size: 12px;
- 
+
 }
-
-
-
-
-
-
 </style>
