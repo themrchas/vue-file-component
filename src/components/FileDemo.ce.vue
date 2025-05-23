@@ -63,6 +63,10 @@
 
 import { ref, defineComponent, watch, computed, onBeforeMount } from 'vue';
 
+
+import {  VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox } from 'vuetify/components';
+
+
 import { ConsoleListener, Logger, LogLevel } from "@pnp/logging";
 import { sp } from "@pnp/sp";
 import { Web } from "@pnp/sp/webs";
@@ -80,8 +84,11 @@ import { List } from "@pnp/sp/lists";
 export default defineComponent({
 
   name: 'FileDemo',
+  components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox},
 
   setup(props) {
+
+   
 
     //  let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
     //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";

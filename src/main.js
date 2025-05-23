@@ -1,6 +1,6 @@
 import { createApp} from 'vue'
 //import './style.css'
-import App from './App.vue'
+//removed for custom element import App from './App.vue'
 
 /** Added for custom element **/
 import { defineCustomElement } from 'vue';
@@ -48,7 +48,17 @@ const vuetify = createVuetify({
     },
   })
 
-  const element = defineCustomElement(FileDemo);
+
+
+
+  //const element = defineCustomElement(FileDemo);
+ 
+const element = defineCustomElement(FileDemo, {
+  plugins: [vuetify], // Ensure Vuetify is available in the component
+  styles: ['@import "vuetify/styles";'], // Manually inject Vuetify styles
+});
+
+
 
 
 // for component createApp(App).use(vuetify).mount('#app')
