@@ -23,3 +23,4 @@ https://stackoverflow.com/questions/67636717/v-checkbox-icon-missing-with-vuetif
 Review:  
 
 <script setup> usage
+stackoverflow how-do-you-include-vuetify-inside-web-component
