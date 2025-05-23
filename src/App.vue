@@ -1,7 +1,7 @@
 <script>
 
 
-import FileDemo  from './components/FileDemo.vue'
+import FileDemo  from './components/FileDemo.ce.vue'
 
 export default {
   name: 'App',

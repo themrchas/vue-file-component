@@ -2,6 +2,12 @@ import { createApp} from 'vue'
 //import './style.css'
 import App from './App.vue'
 
+/** Added for custom element **/
+import { defineCustomElement } from 'vue';
+import FileDemo from './components/FileDemo.ce.vue'
+/******/
+
+
 import { createVuetify } from 'vuetify';
 import { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox } from 'vuetify/components'
 
@@ -42,5 +48,8 @@ const vuetify = createVuetify({
     },
   })
 
+  const element = defineCustomElement(FileDemo);
 
-createApp(App).use(vuetify).mount('#app')
+
+// for component createApp(App).use(vuetify).mount('#app')
+customElements.define('test-file-demo',element);
