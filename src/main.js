@@ -16,7 +16,9 @@ import 'vuetify/styles'
 
 //Icon issue for checkboxes
 import { aliases, mdi} from  'vuetify/iconsets/mdi-svg'
-import { mdiAccount } from '@mdi/js';
+//import { mdiAccount } from '@mdi/js';
+
+import vuetifyGlobalStyles from 'vuetify/styles?inline' //?raw';
 
 /* pre @mdi/js
 const vuetify = createVuetify({
@@ -53,10 +55,18 @@ const vuetify = createVuetify({
 
   //const element = defineCustomElement(FileDemo);
  
+  
 const element = defineCustomElement(FileDemo, {
-  plugins: [vuetify], // Ensure Vuetify is available in the component
-  styles: ['@import "vuetify/styles";'], // Manually inject Vuetify styles
+  //plugins: [vuetify], // Ensure Vuetify is available in the component
+  //styles: ['@import "vuetify/styles";'], // Manually inject Vuetify styles
+  styles: [vuetifyGlobalStyles],
+  plugins: [vuetify]
 });
+
+
+//const element = defineCustomElement(FileDemo);
+//const app = createApp(element);
+//app.use(vuetify);
 
 
 

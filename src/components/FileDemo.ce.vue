@@ -64,8 +64,12 @@
 import { ref, defineComponent, watch, computed, onBeforeMount } from 'vue';
 
 
-import {  VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox } from 'vuetify/components';
+/*import { createVuetify } from 'vuetify';
 
+const vuetify = createVuetify();
+
+import {  VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox } from 'vuetify/components';
+*/
 
 import { ConsoleListener, Logger, LogLevel } from "@pnp/logging";
 import { sp } from "@pnp/sp";
@@ -84,7 +88,7 @@ import { List } from "@pnp/sp/lists";
 export default defineComponent({
 
   name: 'FileDemo',
-  components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox},
+ // components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox},
 
   setup(props) {
 
@@ -168,7 +172,7 @@ export default defineComponent({
 
     onBeforeMount(() => {
       console.log('onBeforeMount')
-      web = Web(url);
+   //   web = Web(url);
     });
 
 
@@ -319,7 +323,8 @@ export default defineComponent({
 
 
 
-  } //setup
+  }, //setup
+  
 
   })
 
