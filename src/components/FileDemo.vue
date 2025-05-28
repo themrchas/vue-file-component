@@ -10,10 +10,7 @@
     <v-container>
       <v-row justify="start">
         <v-col cols="3">
-          <!---
           <v-btn color="info" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
-        -->
-          <v-btn class="bg-puurple-darken-2" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
         </v-col>
         <v-col cols="3">
           <v-btn variant="tonal" type="button" @click="addFileToSharePointList">Add to List Item</v-btn>
@@ -64,8 +61,6 @@
 
 <script>
 
-
-
 import { ref, defineComponent, watch, computed, onBeforeMount } from 'vue';
 
 
@@ -90,7 +85,7 @@ import { List } from "@pnp/sp/lists";
 
 
 
- export default defineComponent({
+export default defineComponent({
 
   name: 'FileDemo',
  // components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox},
@@ -335,10 +330,9 @@ import { List } from "@pnp/sp/lists";
 
 </script>
 
-<!--
 <style>
-@import url("/styles/vuetify.min.css")
 
+@import url("/styles/vuetify.min.css");
 
 
 .testContainer {
@@ -372,13 +366,6 @@ import { List } from "@pnp/sp/lists";
   font-size: 12px;
 
 }
-</style>
--->
 
 
-<style>
-  /* @import url("https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css") */
- /*   @import url("/node_modules/vuetify/dist/vuetify.min.css")  */
-   @import url("/styles/vuetify.min.css"); 
-    
 </style>

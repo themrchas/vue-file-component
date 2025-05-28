@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@pnp/sp": "^2.15.0",
+    "vite-plugin-vuetify": "^2.1.1",
     "vue": "^3.5.13",
     "vuetify": "^3.8.1"
   },
