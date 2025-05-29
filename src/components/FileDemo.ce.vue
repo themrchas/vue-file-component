@@ -10,10 +10,12 @@
     <v-container>
       <v-row justify="start">
         <v-col cols="3">
-          <!---
+          
           <v-btn color="info" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
-        -->
-          <v-btn class="bg-puurple-darken-2" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
+        
+          <!--
+          <v-btn class="bg-red" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
+          -->
         </v-col>
         <v-col cols="3">
           <v-btn variant="tonal" type="button" @click="addFileToSharePointList">Add to List Item</v-btn>
