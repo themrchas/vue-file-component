@@ -170,7 +170,7 @@ import { List } from "@pnp/sp/lists";
 
     onBeforeMount(() => {
       console.log('onBeforeMount')
-   //   web = Web(url);
+      web = Web(url);
     });
 
     /*
