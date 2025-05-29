@@ -16,7 +16,7 @@ import { createVuetify } from 'vuetify';
 import { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox } from 'vuetify/components'
 
 import * as directives from 'vuetify/directives'
-//import 'vuetify/styles'
+import 'vuetify/styles'
 
 //Icon issue for checkboxes
 import { aliases, mdi} from  'vuetify/iconsets/mdi-svg'
@@ -57,6 +57,9 @@ const vuetify = createVuetify({
 
   */
 
+  //shadowNode name
+  const VUE_CUSTOM_COMPONENT_NAME = "test-file-demo";
+
   const vuetify = createVuetify({
     directives,
     icons: {
@@ -67,38 +70,37 @@ const vuetify = createVuetify({
         },
     },
     theme: {
-    defaultTheme: 'light',
+      defaultTheme: 'light', //This controls Vuetify theme light; dark
   },
-
 
 })
 
 
 customElements.define(
-    'test-file-demo',
+    VUE_CUSTOM_COMPONENT_NAME,
     defineCustomElement(FileDemo, {
         plugins: [vuetify],
     })
 )
 
 
-  //const element = defineCustomElement(FileDemo);
- 
- /* 
-const element = defineCustomElement(FileDemo, {
-  //plugins: [vuetify], // Ensure Vuetify is available in the component
-  //styles: ['@import "vuetify/styles";'], // Manually inject Vuetify styles
-  styles: [vuetifyGlobalStyles],
-  plugins: [vuetify]
-});
+
+/* This copies the stylesheet in <head> with id=vuetify-theme-stylesheet to the shadowRoot.
+This stylesheet is dynamically generated and vuetify puts it by defualt into the <head> tag.
 */
+const vuetifyStyle = document.querySelector('#vuetify-theme-stylesheet');
+console.log('stylesheet is',vuetifyStyle);
 
-//const element = defineCustomElement(FileDemo);
-//const app = createApp(element);
-//app.use(vuetify);
+const shadowHost = document.querySelector(VUE_CUSTOM_COMPONENT_NAME);
+console.log("shadowHost is",shadowHost);
 
+const shadowRoot = shadowHost.shadowRoot;
+console.log('shadowRoot is',shadowRoot);
 
-
-
-// for component createApp(App).use(vuetify).mount('#app')
-//customElements.define('test-file-demo',element);
+if (vuetifyStyle) {
+  const clonedStyle = vuetifyStyle.cloneNode(true);
+  shadowRoot.appendChild(clonedStyle);
+} 
+else {
+  console.warn('Vuetify theme style not found.');
+}

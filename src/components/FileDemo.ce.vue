@@ -10,12 +10,11 @@
     <v-container>
       <v-row justify="start">
         <v-col cols="3">
-          
-          <v-btn color="info" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
+                         
+         <v-btn color="info" @click="testMessage">Test Button</v-btn>
+     <!--    <v-btn class="bg-red" @click="testMessage">Test Button 2</v-btn> -->
         
-          <!--
-          <v-btn class="bg-red" @click="addFileToSharePoint">Add to Doc Lib</v-btn>
-          -->
+          
         </v-col>
         <v-col cols="3">
           <v-btn variant="tonal" type="button" @click="addFileToSharePointList">Add to List Item</v-btn>
@@ -25,23 +24,15 @@
 
     <v-container class="testContainer border">
 
-
-
-
-
-      <v-row v-for="(fileNamesRow, index) in attachedFileNamesArray" no-gutters :key="index" justify="start"
-        class="border chkBoxRow h-auto">
+      <v-row v-for="(fileNamesRow, index) in attachedFileNamesArray" no-gutters :key="index" justify="start" class="border chkBoxRow h-auto">
 
         <v-col v-for="(fileName, i) in fileNamesRow" :key="fileName" cols="2" sm="2" class="border">
-          <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName"
-            class="chkBoxContainer"></v-checkbox>
+          <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName" class="chkBoxContainer"></v-checkbox>
         </v-col>
 
       </v-row>
 
       <v-btn @click="deleteAttachments">Delete Files</v-btn>
-
-
 
     </v-container>
 
@@ -68,7 +59,7 @@
 
 
 
-import { ref, defineComponent, watch, computed, onBeforeMount } from 'vue';
+import { ref, defineComponent, watch, computed, onBeforeMount, onMounted } from 'vue';
 
 
 /*import { createVuetify } from 'vuetify';
@@ -181,6 +172,19 @@ import { List } from "@pnp/sp/lists";
       console.log('onBeforeMount')
    //   web = Web(url);
     });
+
+    /*
+    onMounted(() => {
+
+      let test = document.getElementById('#shadow-root');
+      console.log('shadow-root is',shadowHost);
+
+    })
+      */
+
+    const testMessage = _ => {
+      console.log('this is a test message')
+    }
 
 
     /* Add file to SharePoint Document Library using Vuetify File */
@@ -326,7 +330,7 @@ import { List } from "@pnp/sp/lists";
 
 
 
-      return { testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+      return { testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
 
 
 
