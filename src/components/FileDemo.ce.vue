@@ -51,8 +51,6 @@
   <button type="button" @click="addInputFileToSharePoint">Add file</button>
 
 
-
-
 </template>
 
 <script>
@@ -62,12 +60,6 @@
 import { ref, defineComponent, watch, computed, onBeforeMount, onMounted } from 'vue';
 
 
-/*import { createVuetify } from 'vuetify';
-
-const vuetify = createVuetify();
-
-import {  VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox } from 'vuetify/components';
-*/
 
 import { ConsoleListener, Logger, LogLevel } from "@pnp/logging";
 import { sp } from "@pnp/sp";
@@ -87,14 +79,15 @@ import { List } from "@pnp/sp/lists";
 
   name: 'FileDemo',
  // components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox},
+ //components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol },
 
   setup(props) {
 
    
 
-    //  let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
+     let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
     //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
-    let url = "https://nshqdev.sharepoint.com/teams/classic/";
+    //let url = "https://nshqdev.sharepoint.com/teams/classic/";
 
     const SHAREPOINT_LIST_NAME = "PNPTest"
     let itemId = 1;

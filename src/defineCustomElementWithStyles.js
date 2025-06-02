@@ -3,7 +3,7 @@ import { defineCustomElement as VueDefineCustomElement, h, createApp, getCurrent
 
 export const defineCustomElement = (component, { plugins = [] } = {}) =>
   VueDefineCustomElement({
-    //styles: component.styles,  //Removed this as the css is being included in the compoenents <style> tag
+    //styles: component.styles,  //Removed this as the css is being included in the components <style> tag
     render: () => h(component),
     setup() {
       const app = createApp()

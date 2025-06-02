@@ -57,7 +57,7 @@ const vuetify = createVuetify({
 
   */
 
-  //shadowNode name
+  //shadowNode name the name of the custom element
   const VUE_CUSTOM_COMPONENT_NAME = "test-file-demo";
 
   const vuetify = createVuetify({
@@ -85,7 +85,7 @@ customElements.define(
 
 
 
-/* This copies the stylesheet in <head> with id=vuetify-theme-stylesheet to the shadowRoot.
+/* This copies the stylesheet in <head> with id='vuetify-theme-stylesheet' to the shadowRoot.
 This stylesheet is dynamically generated and vuetify puts it by defualt into the <head> tag.
 */
 const vuetifyStyle = document.querySelector('#vuetify-theme-stylesheet');
