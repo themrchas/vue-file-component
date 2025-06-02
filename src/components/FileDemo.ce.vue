@@ -1,8 +1,9 @@
 <template id="test">
 
-  <v-app>
+  <v-app class="w-50">
     <v-container>
-      <v-file-input label="Upload your file" v-model="fileNameSelected" />
+      <!-- Used for Document Library
+      <v-file-input label="Upload your file" v-model="fileNameSelected" /> -->
       <v-file-input label="Upload your file to a SharePoint list" v-model="fileNameForList" />
       <v-btn @click="getAttachmentNames">Attachments</v-btn>
     </v-container>
@@ -302,6 +303,8 @@ import { List } from "@pnp/sp/lists";
     const testUpdateArray = () => {
       attachmentFileNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
     }
+
+    
 
     
     const deleteAttachments = async () => {
