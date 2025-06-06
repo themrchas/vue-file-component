@@ -36,16 +36,74 @@
 
     </v-container>
 
+    <v-container>
+     <v-sheet  elevation="10" max-width="300" class="d-flex justify-space-between" > 
+
+
+    <div class="pa-4">
+      <v-chip-group
+        v-model = "chipsSelected"
+        selected-class="text-primary"
+        column
+        multiple
+      >
+        <v-chip
+          v-for="file in chipFileAttachmentNames"
+          :key="file"
+          filter
+          :value="file"
+
+
+        >
+          {{ file }}
+        </v-chip>
+      </v-chip-group>
+    </div>
+
+  </v-sheet>
+  <v-sheet
+
+      class="pa-3 bg-primary text-center"
+      rounded="b-lg"
+      elevation="10" max-width="300"
+    >
+    <!--   <v-btn icon="mdi-content-save-cog-outline"></v-btn> -->
+      <!--  <v-btn :icon="mdiContentSaveCogOutline"></v-btn> -->
+        <v-btn icon="$battery"></v-btn>
+
+      <v-btn 
+        class="ms-2"
+        icon="$checkBold"
+        base-color="green"
+     ></v-btn>
+
+     <v-btn 
+      class="ms-2"
+      prepend-icon="$cancel"
+      color="red-lighten-2"
+      >Reset</v-btn>
+
+     
+      
+    </v-sheet>
+  </v-container>
+
+
+ 
+
   </v-app>
 
 
   <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
+  <h4>chipe selected {{ chipsSelected }}</h4>
   <h2>{{ fileName }}</h2>
 
   <br />
   <br />
 
   <button type="button" @click="testUpdateArray">Update Array</button>
+  <button type="button" @click="updateChipArrayFileNames">Update Chip  Array</button>
+
 
   <input type="file" id="fileInput"></input>
   <button type="button" @click="addInputFileToSharePoint">Add file</button>
@@ -83,6 +141,9 @@ import { List } from "@pnp/sp/lists";
 
   setup(props) {
 
+    
+
+
    
 
      let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
@@ -98,7 +159,6 @@ import { List } from "@pnp/sp/lists";
     console.log('starting setup routine');
 
 
-
     //Vue name for file chosen to be saved to a Document Library 
     let fileNameSelected = ref(null);
 
@@ -107,6 +167,11 @@ import { List } from "@pnp/sp/lists";
 
     //Item File attachment names
     let attachmentFileNames = ref([]);
+
+    //Item for File attachment names as chips
+    let chipFileAttachmentNames = ref([]);
+
+    let chipsSelected = ref([]);
 
     //Array of those items that have been selected in the checkboxs
     let checkboxFileNamesSelected = ref([]);
@@ -303,6 +368,10 @@ import { List } from "@pnp/sp/lists";
       attachmentFileNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
     }
 
+    const updateChipArrayFileNames = () => {
+      chipFileAttachmentNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
+    }
+
     
     const deleteAttachments = async () => {
 
@@ -323,7 +392,7 @@ import { List } from "@pnp/sp/lists";
 
 
 
-      return { testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+      return { /* mdiContentSaveCogOutline, */  chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
 
 
 

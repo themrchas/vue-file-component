@@ -20,42 +20,9 @@ import 'vuetify/styles'
 
 //Icon issue for checkboxes
 import { aliases, mdi} from  'vuetify/iconsets/mdi-svg'
-//import { mdiAccount } from '@mdi/js';
+import {  mdiCheckBold, mdiCancel } from '@mdi/js';
 
-//import vuetifyGlobalStyles from 'vuetify/styles?inline' //?raw';
 
-/* pre @mdi/js
-const vuetify = createVuetify({
-    components : {
-        VApp, VContainer, VFileInput, 
-        VBtn, VRow, VCol,
-        VCheckbox
-     },
-    directives,
-    icons: {
-      defaultSet: 'mdi'
-    }
-  })
-    */
-
-  /*
-  const vuetify = createVuetify({
-    components : {
-        VApp, VContainer, VFileInput, 
-        VBtn, VRow, VCol,
-        VCheckbox
-     },
-    directives,
-    icons: {
-      defaultSet: 'mdi',
-      aliases,
-          sets: { mdi },
-
-      
-    },
-  })
-
-  */
 
   //shadowNode name the name of the custom element
   const VUE_CUSTOM_COMPONENT_NAME = "test-file-demo";
@@ -64,7 +31,11 @@ const vuetify = createVuetify({
     directives,
     icons: {
         defaultSet: 'mdi',
-        aliases,
+        aliases: { 
+          ...aliases,
+         checkBold:mdiCheckBold,
+        cancel:  mdiCancel
+        },
         sets: {
           mdi,
         },

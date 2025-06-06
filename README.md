@@ -25,5 +25,6 @@ https://stackoverflow.com/questions/26182858/http-400-bad-request-when-using-get
 Used answer by 'theking' to modify main.js
 https://stackoverflow.com/questions/67636717/v-checkbox-icon-missing-with-vuetify-mdi-js-whats-the-best-way-to-import-it
 
+### mdi icon library https://pictogrammers.com/library/mdi/
 
 
