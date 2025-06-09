@@ -1,6 +1,6 @@
 # Vue 3 + Vite
 
-# This is essentially the final sandbox used to create the production version of the vuejs custom element.
+# This is  the code used for custom element in production.
 
 This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
@@ -28,5 +28,8 @@ Used answer by 'theking' to modify main.js
 https://stackoverflow.com/questions/67636717/v-checkbox-icon-missing-with-vuetify-mdi-js-whats-the-best-way-to-import-it
 
 ### mdi icon library https://pictogrammers.com/library/mdi/
+
+## Issues
+- in the OnBeforeMount check if the async stops the onBeforeMount code
 
 

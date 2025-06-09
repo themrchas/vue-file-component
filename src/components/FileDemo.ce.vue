@@ -24,14 +24,7 @@
 
     <v-container class="testContainer border">
 
-      <v-row v-for="(fileNamesRow, index) in attachedFileNamesArray" no-gutters :key="index" justify="start" class="border chkBoxRow h-auto">
-
-        <v-col v-for="(fileName, i) in fileNamesRow" :key="fileName" cols="2" sm="2" class="border">
-          <v-checkbox v-model="checkboxFileNamesSelected" :label="fileName" :value="fileName" class="chkBoxContainer"></v-checkbox>
-        </v-col>
-
-      </v-row>
-
+     
       <v-btn @click="deleteAttachments">Delete Files</v-btn>
 
     </v-container>
@@ -39,11 +32,11 @@
     <v-container>
      <v-sheet  elevation="10" max-width="300" class="d-flex justify-space-between" > 
 
-
+ 
     <div class="pa-4">
       <v-chip-group
         v-model = "chipsSelected"
-        selected-class="text-primary"
+       selected-class="bg-green-lighten-1"
         column
         multiple
       >
@@ -52,6 +45,7 @@
           :key="file"
           filter
           :value="file"
+          
         >
           {{ file }}
         </v-chip>
@@ -70,16 +64,16 @@
         class="ms-2"
         prepend-icon="$checkBold"
         base-color="green"
-        @click="deleteFiles"
+        @click="deleteAttachments"
      >Delete</v-btn>
 
      <v-btn 
       class="ms-2"
       prepend-icon="$cancel"
       color="red-lighten-2"
+      @click="clearChosenAttachments"
      >Reset</v-btn>
-
-     
+    
       
     </v-sheet>
   </v-container>
@@ -90,14 +84,13 @@
   </v-app>
 
 
-  <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
+  
   <h4>chips selected {{ chipsSelected }}</h4>
   <h2>{{ fileName }}</h2>
 
   <br />
   <br />
-
-  <button type="button" @click="testUpdateArray">Update Array</button>
+ 
   <button type="button" @click="updateChipArrayFileNames">Update Chip  Array</button>
 
 
@@ -132,26 +125,17 @@ import { List } from "@pnp/sp/lists";
  export default defineComponent({
 
   name: 'FileDemo',
- // components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol, VCheckbox},
- //components: { VApp, VContainer, VFileInput, VBtn, VRow, VCol },
-
   setup(props) {
 
     
-
-
-   
-
-     let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
+   //  let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
     //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
-    //let url = "https://nshqdev.sharepoint.com/teams/classic/";
+    let url = "https://nshqdev.sharepoint.com/teams/classic/";
 
     const SHAREPOINT_LIST_NAME = "PNPTest"
     let itemId = 1;
 
-    const ATTACHMENT_FILE_NAMES_PER_ROW = 6;
-
-
+    
     console.log('starting setup routine');
 
 
@@ -164,29 +148,16 @@ import { List } from "@pnp/sp/lists";
     //Item File attachment names
     let attachmentFileNames = ref([]);
 
-    //Item for File attachment names as chips
+    //Array containing the names of all files currently attached to the list item. These will be displayed in the chip group. 
     let chipFileAttachmentNames = ref([]);
 
+    //File names that are selected in the chip group.
     let chipsSelected = ref([]);
 
-    //Array of those items that have been selected in the checkboxs
-    let checkboxFileNamesSelected = ref([]);
-
+   
     //Name of file to be uploaded using HTMLElement to a Document Library
     const fileName = computed(() => {
       return fileNameSelected.value?.name ? fileNameSelected.value.name : "No file has been selected"
-    })
-
-    //Returns a multidimensional array of the fetched attachment file names with each array row containing ATTACHMENT_FILE_NAMES_PER_ROW file names
-    const attachedFileNamesArray = computed(() => {
-
-      console.log('computed: current value of attachmentFileNames', attachmentFileNames.value)
-
-      let toReturn = Array.from({ length: Math.ceil(attachmentFileNames.value.length / ATTACHMENT_FILE_NAMES_PER_ROW) },
-        (_, i) => attachmentFileNames.value.slice(i * ATTACHMENT_FILE_NAMES_PER_ROW, i * ATTACHMENT_FILE_NAMES_PER_ROW + ATTACHMENT_FILE_NAMES_PER_ROW)
-      )
-
-      return toReturn
     })
 
 
@@ -204,11 +175,7 @@ import { List } from "@pnp/sp/lists";
 
     })
 
-    watch(attachedFileNamesArray, () => {
-      console.log('attachedFileNamesArray changed - ', attachedFileNamesArray.value);
-
-    })
-
+   
 
 
     sp.setup({
@@ -223,18 +190,18 @@ import { List } from "@pnp/sp/lists";
     }); //sp.setup
 
     onBeforeMount(() => {
-      console.log('onBeforeMount')
+      console.log('enter onBeforeMount');
       web = Web(url);
+
+
+getAttachmentNames();
+
+console.log('exit onBeforeMount');
+
+
     });
 
-    /*
-    onMounted(() => {
-
-      let test = document.getElementById('#shadow-root');
-      console.log('shadow-root is',shadowHost);
-
-    })
-      */
+    
 
     const testMessage = _ => {
       console.log('this is a test message')
@@ -338,7 +305,7 @@ import { List } from "@pnp/sp/lists";
 
     const getAttachmentNames = async () => {
 
-      console.log('yes money');
+      console.log('getAttachmentNames - executing');
 
       Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
 
@@ -351,28 +318,26 @@ import { List } from "@pnp/sp/lists";
       const listItemAttachments = await listItem.attachmentFiles();
       console.log("attachment data is ", listItemAttachments);
 
-      attachmentFileNames.value = listItemAttachments.map((attachment) => attachment.FileName);
-      console.log('file names are', attachmentFileNames.value);
+      //attachmentFileNames.value = listItemAttachments.map((attachment) => attachment.FileName);
+      chipFileAttachmentNames.value = listItemAttachments.map((attachment) => attachment.FileName);
+      console.log('file names are',chipFileAttachmentNames.value);
 
 
-      Logger.write("addInputFileToSharePoint: listItemAttachments", listItemAttachments);
+      Logger.write("addInputFileToSharePoint: chipFileAttachmentNames", chipFileAttachmentNames);
 
 
     }
 
-    const testUpdateArray = () => {
-      attachmentFileNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
-    }
-
-    const updateChipArrayFileNames = () => {
+        const updateChipArrayFileNames = () => {
       chipFileAttachmentNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
     }
 
-    const deleteFiles = () => {
-      alert('Deleting files');
+    //Resets the filter on the chip group so that no items are checked.
+    const clearChosenAttachments = () => {
+      chipsSelected.value.length = [];
     }
 
-    
+       
     const deleteAttachments_old = async () => {
 
       //Delete all files from the list item
@@ -393,7 +358,7 @@ import { List } from "@pnp/sp/lists";
     const deleteAttachments = async () => {
 
       //Delete all files from the list item
-      let retVal = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(itemId).attachmentFiles.deleteMultiple(checkboxFileNamesSelected.value.join());
+      let retVal = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(itemId).attachmentFiles.deleteMultiple(chipsSelected.value.join());
 
       if (retVal) {
         console.log("deleteAttachments returned", retVal);
@@ -410,7 +375,7 @@ import { List } from "@pnp/sp/lists";
 
 
 
-      return {  chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+      return {  clearChosenAttachments, chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, fileNameSelected, fileName, fileNameForList, attachmentFileNames,  addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
 
 
 
@@ -466,5 +431,7 @@ import { List } from "@pnp/sp/lists";
   /* @import url("https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css") */
  /*   @import url("/node_modules/vuetify/dist/vuetify.min.css")  */
    @import url("/styles/vuetify.min.css"); 
+
+   
     
 </style>
