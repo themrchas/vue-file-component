@@ -52,8 +52,6 @@
           :key="file"
           filter
           :value="file"
-
-
         >
           {{ file }}
         </v-chip>
@@ -67,21 +65,19 @@
       rounded="b-lg"
       elevation="10" max-width="300"
     >
-    <!--   <v-btn icon="mdi-content-save-cog-outline"></v-btn> -->
-      <!--  <v-btn :icon="mdiContentSaveCogOutline"></v-btn> -->
-        <v-btn icon="$battery"></v-btn>
-
+    
       <v-btn 
         class="ms-2"
-        icon="$checkBold"
+        prepend-icon="$checkBold"
         base-color="green"
-     ></v-btn>
+        @click="deleteFiles"
+     >Delete</v-btn>
 
      <v-btn 
       class="ms-2"
       prepend-icon="$cancel"
       color="red-lighten-2"
-      >Reset</v-btn>
+     >Reset</v-btn>
 
      
       
@@ -95,7 +91,7 @@
 
 
   <h4>checkboxFileNamesSelected {{ checkboxFileNamesSelected }}</h4>
-  <h4>chipe selected {{ chipsSelected }}</h4>
+  <h4>chips selected {{ chipsSelected }}</h4>
   <h2>{{ fileName }}</h2>
 
   <br />
@@ -372,7 +368,28 @@ import { List } from "@pnp/sp/lists";
       chipFileAttachmentNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
     }
 
+    const deleteFiles = () => {
+      alert('Deleting files');
+    }
+
     
+    const deleteAttachments_old = async () => {
+
+      //Delete all files from the list item
+      let retVal = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(itemId).attachmentFiles.deleteMultiple(checkboxFileNamesSelected.value.join());
+
+      if (retVal) {
+        console.log("deleteAttachments returned", retVal);
+
+      }
+      //Remove the deleted file 
+      else {
+
+        await getAttachmentNames();
+
+      }
+    } //deleteAttachments
+
     const deleteAttachments = async () => {
 
       //Delete all files from the list item
@@ -392,7 +409,8 @@ import { List } from "@pnp/sp/lists";
 
 
 
-      return { /* mdiContentSaveCogOutline, */  chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+
+      return {  chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
 
 
 
