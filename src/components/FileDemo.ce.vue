@@ -1,97 +1,61 @@
 <template id="test">
 
   <v-app>
-    <v-container>
-      <v-file-input label="Upload your file" v-model="fileNameSelected" />
-      <v-file-input label="Upload your file to a SharePoint list" v-model="fileNameForList" />
-      <v-btn @click="getAttachmentNames">Attachments</v-btn>
-    </v-container>
+
+
 
     <v-container>
-      <v-row justify="start">
-        <v-col cols="3">
-                         
-         <v-btn color="info" @click="testMessage">Test Button</v-btn>
-     <!--    <v-btn class="bg-red" @click="testMessage">Test Button 2</v-btn> -->
-        
-          
-        </v-col>
-        <v-col cols="3">
-          <v-btn variant="tonal" type="button" @click="addFileToSharePointList">Add to List Item</v-btn>
-        </v-col>
-      </v-row>
+
+      <v-sheet class="pa-3 bg-element text-center" rounded="t-lg" elevation="10" max-width="400">
+
+        <!--hide-details - removes space for messages under the selected file name -->
+        <v-file-input label="Choose CONOP file to upload" v-model="fileNameForList" hide-details />
+
+      </v-sheet>
+
+      <v-sheet elevation="10" max-width="400" class="d-flex justify-space-between">
+
+        <div class="pa-4">
+
+
+
+
+
+
+          <v-chip-group v-model="chipsSelected" selected-class="bg-green-lighten-1" column multiple>
+            <v-chip v-for="file in chipFileAttachmentNames" :key="file" filter :value="file">
+              {{ file }}
+            </v-chip>
+          </v-chip-group>
+        </div>
+
+      </v-sheet>
+      <v-sheet class="pa-3 bg-element text-center" rounded="b-lg" elevation="10" max-width="400">
+
+        <v-btn class="ms-2" prepend-icon="$checkBold" base-color="green" @click="deleteAttachments">Upload</v-btn>
+
+        <v-btn class="ms-2" prepend-icon="$trashCan" base-color="red-lighten-2" @click="deleteAttachments">Delete</v-btn>
+
+        <v-btn class="ms-2" prepend-icon="$cancel" base-color="grey-darken-1" @click="clearChosenAttachments">Reset</v-btn>
+
+
+      </v-sheet>
     </v-container>
 
-    <v-container class="testContainer border">
-
-     
-      <v-btn @click="deleteAttachments">Delete Files</v-btn>
-
-    </v-container>
-
-    <v-container>
-     <v-sheet  elevation="10" max-width="300" class="d-flex justify-space-between" > 
-
- 
-    <div class="pa-4">
-      <v-chip-group
-        v-model = "chipsSelected"
-       selected-class="bg-green-lighten-1"
-        column
-        multiple
-      >
-        <v-chip
-          v-for="file in chipFileAttachmentNames"
-          :key="file"
-          filter
-          :value="file"
-          
-        >
-          {{ file }}
-        </v-chip>
-      </v-chip-group>
-    </div>
-
-  </v-sheet>
-  <v-sheet
-
-      class="pa-3 bg-primary text-center"
-      rounded="b-lg"
-      elevation="10" max-width="300"
-    >
-    
-      <v-btn 
-        class="ms-2"
-        prepend-icon="$checkBold"
-        base-color="green"
-        @click="deleteAttachments"
-     >Delete</v-btn>
-
-     <v-btn 
-      class="ms-2"
-      prepend-icon="$cancel"
-      color="red-lighten-2"
-      @click="clearChosenAttachments"
-     >Reset</v-btn>
-    
-      
-    </v-sheet>
-  </v-container>
 
 
- 
 
   </v-app>
 
 
-  
+
   <h4>chips selected {{ chipsSelected }}</h4>
   <h2>{{ fileName }}</h2>
 
   <br />
   <br />
- 
-  <button type="button" @click="updateChipArrayFileNames">Update Chip  Array</button>
+
+  <button type="button" @click="updateChipArrayFileNames">Update Chip Array</button>
 
 
   <input type="file" id="fileInput"></input>
@@ -122,20 +86,20 @@ import { List } from "@pnp/sp/lists";
 
 
 
- export default defineComponent({
+export default defineComponent({
 
   name: 'FileDemo',
   setup(props) {
 
-    
-   //  let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
+
+    //  let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
     //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
     let url = "https://nshqdev.sharepoint.com/teams/classic/";
 
     const SHAREPOINT_LIST_NAME = "PNPTest"
     let itemId = 1;
 
-    
+
     console.log('starting setup routine');
 
 
@@ -154,7 +118,7 @@ import { List } from "@pnp/sp/lists";
     //File names that are selected in the chip group.
     let chipsSelected = ref([]);
 
-   
+
     //Name of file to be uploaded using HTMLElement to a Document Library
     const fileName = computed(() => {
       return fileNameSelected.value?.name ? fileNameSelected.value.name : "No file has been selected"
@@ -175,7 +139,7 @@ import { List } from "@pnp/sp/lists";
 
     })
 
-   
+
 
 
     sp.setup({
@@ -191,21 +155,17 @@ import { List } from "@pnp/sp/lists";
 
     onBeforeMount(() => {
       console.log('enter onBeforeMount');
+
+      //Grab web refernce 
       web = Web(url);
 
+      //Get current item attachement names
+      getAttachmentNames();
 
-getAttachmentNames();
-
-console.log('exit onBeforeMount');
+      console.log('exit onBeforeMount');
 
 
     });
-
-    
-
-    const testMessage = _ => {
-      console.log('this is a test message')
-    }
 
 
     /* Add file to SharePoint Document Library using Vuetify File */
@@ -310,8 +270,7 @@ console.log('exit onBeforeMount');
       Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
 
       //Grab the web information using pnpjs
-      //    const web = Web(url);
-
+      
       // const attachments = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getElementById("1").attachmentFiles();
       //const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
       const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)
@@ -320,7 +279,7 @@ console.log('exit onBeforeMount');
 
       //attachmentFileNames.value = listItemAttachments.map((attachment) => attachment.FileName);
       chipFileAttachmentNames.value = listItemAttachments.map((attachment) => attachment.FileName);
-      console.log('file names are',chipFileAttachmentNames.value);
+      console.log('file names are', chipFileAttachmentNames.value);
 
 
       Logger.write("addInputFileToSharePoint: chipFileAttachmentNames", chipFileAttachmentNames);
@@ -328,7 +287,7 @@ console.log('exit onBeforeMount');
 
     }
 
-        const updateChipArrayFileNames = () => {
+    const updateChipArrayFileNames = () => {
       chipFileAttachmentNames.value = ["file1 wiil this overfloe.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt", "file6.txt", "file7.txt"];
     }
 
@@ -337,24 +296,8 @@ console.log('exit onBeforeMount');
       chipsSelected.value.length = [];
     }
 
-       
-    const deleteAttachments_old = async () => {
 
-      //Delete all files from the list item
-      let retVal = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(itemId).attachmentFiles.deleteMultiple(checkboxFileNamesSelected.value.join());
-
-      if (retVal) {
-        console.log("deleteAttachments returned", retVal);
-
-      }
-      //Remove the deleted file 
-      else {
-
-        await getAttachmentNames();
-
-      }
-    } //deleteAttachments
-
+    //Deletes the files that have been selected in the chip group
     const deleteAttachments = async () => {
 
       //Delete all files from the list item
@@ -364,7 +307,7 @@ console.log('exit onBeforeMount');
         console.log("deleteAttachments returned", retVal);
 
       }
-      //Remove the deleted file 
+      //Re-populate the chip group with remaining attachement file names
       else {
 
         await getAttachmentNames();
@@ -375,63 +318,24 @@ console.log('exit onBeforeMount');
 
 
 
-      return {  clearChosenAttachments, chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, fileNameSelected, fileName, fileNameForList, attachmentFileNames,  addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+    return { clearChosenAttachments, chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames, fileNameSelected, fileName, fileNameForList, attachmentFileNames, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
 
 
 
   }, //setup
-  
 
-  })
+
+})
 
 </script>
 
-<!--
-<style>
-@import url("/styles/vuetify.min.css")
-
-
-
-.testContainer {
-  width: 50%
-}
-
-/*
-.testContainer {
-  width:300px
-}
-  */
-/* .chkBoxRow { 
-    height:auto
-   
-
-  } */
-
-.v-container {
-  margin-left: 50px;
-
-}
-
-
-/* .chkBoxContainer {
-  font-size: 6px;
-}
-*/
-
-
-:deep(.v-checkbox .v-label) {
-  font-size: 12px;
-
-}
-</style>
--->
 
 
 <style>
-  /* @import url("https://cdn.jsdelivr.net/npm/vuetify@3/dist/vuetify.min.css") */
- /*   @import url("/node_modules/vuetify/dist/vuetify.min.css")  */
-   @import url("/styles/vuetify.min.css"); 
+/* Inject vuetify css into element */
+@import url("/styles/vuetify.min.css");
 
-   
-    
+.bg-element {
+  background-color: rgb(229, 242, 253, 1);
+}
 </style>
