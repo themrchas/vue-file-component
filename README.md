@@ -31,5 +31,7 @@ https://stackoverflow.com/questions/67636717/v-checkbox-icon-missing-with-vuetif
 
 ## Issues
 - in the OnBeforeMount check if the async stops the onBeforeMount code
+-modify the theme to to include custom class 
+-import functions from another file
 
 

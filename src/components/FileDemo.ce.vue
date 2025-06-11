@@ -15,11 +15,11 @@
 
       <v-sheet elevation="10" max-width="400" class="d-flex justify-space-between">
 
-        <div class="pa-4">
+     <!--   <div class="pa-4"> -->
 
-
-
-
+          <v-card-text class="pa-4">
+            <h2 class="text-subtitle-1 font-weight-bold mb-3">Current file attachments:</h2>
+          
 
 
           <v-chip-group v-model="chipsSelected" selected-class="bg-green-lighten-1" column multiple>
@@ -27,12 +27,17 @@
               {{ file }}
             </v-chip>
           </v-chip-group>
-        </div>
+
+
+           </v-card-text>
+    <!--    </div> -->
+
+     
 
       </v-sheet>
       <v-sheet class="pa-3 bg-element text-center" rounded="b-lg" elevation="10" max-width="400">
 
-        <v-btn class="ms-2" prepend-icon="$checkBold" base-color="green" @click="deleteAttachments">Upload</v-btn>
+        <v-btn class="ms-2" prepend-icon="$checkBold" base-color="green" @click="addFileToSharePointList">Upload</v-btn>
 
         <v-btn class="ms-2" prepend-icon="$trashCan" base-color="red-lighten-2" @click="deleteAttachments">Delete</v-btn>
 
@@ -260,6 +265,8 @@ export default defineComponent({
 
       Logger.write("File upload to SharePoint list is complete.");
 
+      await getAttachmentNames()
+
     } //addFileToSharePointList
 
 
@@ -267,7 +274,7 @@ export default defineComponent({
 
       console.log('getAttachmentNames - executing');
 
-      Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
+      Logger.write("getAttachmentNames: Grabbing names of list item files attachments");
 
       //Grab the web information using pnpjs
       
@@ -283,6 +290,8 @@ export default defineComponent({
 
 
       Logger.write("addInputFileToSharePoint: chipFileAttachmentNames", chipFileAttachmentNames);
+      
+      clearChosenAttachments();
 
 
     }
@@ -318,7 +327,7 @@ export default defineComponent({
 
 
 
-    return { clearChosenAttachments, chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames, fileNameSelected, fileName, fileNameForList, attachmentFileNames, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+    return { clearChosenAttachments, chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames, fileNameSelected, fileName, fileNameForList, attachmentFileNames, addFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
 
 
 
