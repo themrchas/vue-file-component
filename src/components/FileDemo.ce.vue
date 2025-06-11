@@ -65,6 +65,13 @@
       rounded="b-lg"
       elevation="10" max-width="300"
     >
+
+      <v-btn 
+        class="ms-2"
+        prepend-icon="$checkBold"
+        base-color="green"
+        @click="downloadFiles"
+     >Download</v-btn>
     
       <v-btn 
         class="ms-2"
@@ -97,6 +104,7 @@
   <br />
   <br />
 
+  <button type="button" @click="downloadFile">Download</button>
   <button type="button" @click="testUpdateArray">Update Array</button>
   <button type="button" @click="updateChipArrayFileNames">Update Chip  Array</button>
 
@@ -142,9 +150,9 @@ import { List } from "@pnp/sp/lists";
 
    
 
-     let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
+     //let url = "https://command.nshq.nato.int/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
     //let url = "/sites/CS/ikm/KnowledgePortal/sandbox/chaskm/";
-    //let url = "https://nshqdev.sharepoint.com/teams/classic/";
+    let url = "https://nshqdev.sharepoint.com/teams/classic/";
 
     const SHAREPOINT_LIST_NAME = "PNPTest"
     let itemId = 1;
@@ -408,9 +416,53 @@ import { List } from "@pnp/sp/lists";
     } //deleteAttachments
 
 
+    const downloadFiles= async () => {
 
 
-      return {  chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+       console.log('yes moneyy');
+
+      Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
+
+      //Grab the web information using pnpjs
+      //    const web = Web(url);
+
+      // const attachments = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getElementById("1").attachmentFiles();
+      //const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
+      const listItem1= await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
+      const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1);
+
+      const blobfile = await listItem.attachmentFiles.getByName('file1.txt')();
+      
+      const listItemAttachments = await listItem.attachmentFiles();
+      console.log("downloadFile: listItem  ", listItem);
+ console.log("downloadFile: listItemAttachments  ", listItemAttachments);
+ console.log("listitem1", listItem1)
+ console.log('blobfile is',blobfile);
+
+
+ //Get uel of target file to downlaod
+ const serverRelativeUrl = listItemAttachments[2].ServerRelativeUrl;
+
+  const link = document.createElement("a");
+  link.href = serverRelativeUrl;
+  link.download = "screenshot1.png";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+
+
+
+ //Need to attempt to grab specific file information here or cylce through data in listItemAttachments
+
+
+
+
+    }
+
+
+
+      return {  chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames,  testMessage, testUpdateArray, fileNameSelected, fileName, fileNameForList, attachmentFileNames, attachedFileNamesArray, checkboxFileNamesSelected, addFileToSharePoint, addInputFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments, downloadFiles, deleteFiles }
 
 
 

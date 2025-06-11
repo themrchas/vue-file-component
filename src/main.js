@@ -20,7 +20,7 @@ import 'vuetify/styles'
 
 //Icon issue for checkboxes
 import { aliases, mdi} from  'vuetify/iconsets/mdi-svg'
-import {  mdiCheckBold, mdiCancel } from '@mdi/js';
+import {  mdiCheckBold, mdiCancel, mdiFileDownload } from '@mdi/js';
 
 
 
@@ -34,7 +34,8 @@ import {  mdiCheckBold, mdiCancel } from '@mdi/js';
         aliases: { 
           ...aliases,
          checkBold:mdiCheckBold,
-        cancel:  mdiCancel
+        cancel:  mdiCancel,
+         download: mdiFileDownload
         },
         sets: {
           mdi,
