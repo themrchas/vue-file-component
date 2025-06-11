@@ -6,17 +6,16 @@
 
     <v-container>
 
-      <v-sheet class="pa-3 bg-element text-center" rounded="t-lg" elevation="10" max-width="400">
+      <v-sheet class="pa-3 bg-element text-center" rounded="t-lg" elevation="10" max-width="600">
 
         <!--hide-details - removes space for messages under the selected file name -->
         <v-file-input label="Choose CONOP file to upload" v-model="fileNameForList" hide-details />
 
       </v-sheet>
 
-      <v-sheet elevation="10" max-width="400" class="d-flex justify-space-between">
+      <v-sheet elevation="10" max-width="600" class="d-flex justify-space-between">
 
-     <!--   <div class="pa-4"> -->
-
+     
           <v-card-text class="pa-4">
             <h2 class="text-subtitle-1 font-weight-bold mb-3">Current file attachments:</h2>
           
@@ -30,12 +29,14 @@
 
 
            </v-card-text>
-    <!--    </div> -->
-
+    
      
 
       </v-sheet>
-      <v-sheet class="pa-3 bg-element text-center" rounded="b-lg" elevation="10" max-width="400">
+      <v-sheet class="pa-3 bg-element text-center" rounded="b-lg" elevation="10" max-width="600">
+
+        <!-- Allow the user to download one file at a time. -->
+        <v-btn class="ms-2" prepend-icon="$fileDownloadOutline"  base-color="green" @click="downloadAttachments" :disabled="chipsSelected.length != 1">Download</v-btn>
 
         <v-btn class="ms-2" prepend-icon="$checkBold" base-color="green" @click="addFileToSharePointList">Upload</v-btn>
 
@@ -55,6 +56,7 @@
 
 
   <h4>chips selected {{ chipsSelected }}</h4>
+  <h4>chips selected length {{ chipsSelected.length }}</h4>
   <h2>{{ fileName }}</h2>
 
   <br />
@@ -324,7 +326,7 @@ export default defineComponent({
       }
     } //deleteAttachments
 
-    const downloadFiles= async () => {
+    const downloadAttachments= async () => {
 
 
        console.log('yes moneyy');
@@ -339,22 +341,35 @@ export default defineComponent({
       const listItem1= await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
       const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1);
 
-      const blobfile = await listItem.attachmentFiles.getByName('file1.txt')();
+     // const blobfile = await listItem.attachmentFiles.getByName('file1.txt')();
+
+
+     //Currently we allow one file to be downloaded 
+
+
+
       
       const listItemAttachments = await listItem.attachmentFiles();
       console.log("downloadFile: listItem  ", listItem);
  console.log("downloadFile: listItemAttachments  ", listItemAttachments);
  console.log("listitem1", listItem1)
- console.log('blobfile is',blobfile);
+ //console.log('blobfile is',blobfile);
 
- let fileInfo = listItemAttachments.find( (element) => { element.FileName === "file1.txt" });
+// let fileInfo = listItemAttachments.find( (element) =>  element.FileName === "file1.txt"  );
+
+//Name of the file to be dowloaded
+const chipSelectedFileName =  chipsSelected.value[0]
+
+let fileInfo = listItemAttachments.find( (element) =>  element.FileName === chipSelectedFileName  );
+
+ console.log("fileInfo",fileInfo);
 
  //Get uel of target file to downlaod
  const serverRelativeUrl = fileInfo.ServerRelativeUrl;
 
   const link = document.createElement("a");
   link.href = serverRelativeUrl;
-  link.download = "screenshot1.png";
+  link.download = chipSelectedFileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -373,7 +388,7 @@ export default defineComponent({
 
 
 
-    return { clearChosenAttachments, chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames, fileNameSelected, fileName, fileNameForList, attachmentFileNames, addFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments }
+    return { clearChosenAttachments, chipsSelected, chipFileAttachmentNames, updateChipArrayFileNames, fileNameSelected, fileName, fileNameForList, attachmentFileNames, addFileToSharePoint, addFileToSharePointList, getAttachmentNames, deleteAttachments, downloadAttachments }
 
 
 
