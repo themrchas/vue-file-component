@@ -324,6 +324,52 @@ export default defineComponent({
       }
     } //deleteAttachments
 
+    const downloadFiles= async () => {
+
+
+       console.log('yes moneyy');
+
+      Logger.write("addInputFileToSharePoint: Grabbing names of list item files attachments");
+
+      //Grab the web information using pnpjs
+      //    const web = Web(url);
+
+      // const attachments = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getElementById("1").attachmentFiles();
+      //const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
+      const listItem1= await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1)(); //worked
+      const listItem = await web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.getById(1);
+
+      const blobfile = await listItem.attachmentFiles.getByName('file1.txt')();
+      
+      const listItemAttachments = await listItem.attachmentFiles();
+      console.log("downloadFile: listItem  ", listItem);
+ console.log("downloadFile: listItemAttachments  ", listItemAttachments);
+ console.log("listitem1", listItem1)
+ console.log('blobfile is',blobfile);
+
+ let fileInfo = listItemAttachments.find( (element) => { element.FileName === "file1.txt" });
+
+ //Get uel of target file to downlaod
+ const serverRelativeUrl = fileInfo.ServerRelativeUrl;
+
+  const link = document.createElement("a");
+  link.href = serverRelativeUrl;
+  link.download = "screenshot1.png";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+
+
+
+ //Need to attempt to grab specific file information here or cylce through data in listItemAttachments
+
+
+
+
+    }
+
+
 
 
 
